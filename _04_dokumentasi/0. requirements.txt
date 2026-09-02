@@ -1,0 +1,15 @@
+# Python Dependencies untuk Project "Slide Fiskal"
+# Install dengan: pip install -r "0. requirements.txt"
+
+# ===== Data & Excel =====
+pandas>=1.5.0
+openpyxl>=3.0.0     # baca file .xlsx (fiskal.xlsx, data_econ.xlsx)
+xlrd>=2.0.1         # baca file .xls format lama (Outstanding.xls)
+numpy>=1.20.0
+
+# ===== Chart =====
+matplotlib>=3.4.0
+
+# ===== Tabel (HTML) =====
+great_tables>=0.3.0
+

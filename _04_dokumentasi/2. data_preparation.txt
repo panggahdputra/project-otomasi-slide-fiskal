@@ -1,0 +1,88 @@
+================================================================================
+  PANDUAN PENYIAPAN DATA - PROJECT SLIDE FISKAL (MARKET UPDATE - PART FISKAL)
+================================================================================
+
+Panduan ini menjelaskan struktur folder _01_data_input dan format file Excel yang dibutuhkan oleh _02_script/data_preparation.py.
+
+
+================================================================================
+STRUKTUR FOLDER _01_DATA_INPUT
+================================================================================
+
+Folder _01_data_input berisi 3 subfolder input + 1 subfolder output:
+
+_01_data_input/
+├── 00_input_quarto/       [Output dari data_preparation.py -- JANGAN diedit manual]
+├── 01_raw_outstanding/    [File .xls Outstanding, dipakai utk ambil kurs]
+├── 02_fiskal/             [File fiskal.xlsx]
+└── 03_econ/               [File data_econ.xlsx]
+
+PENTING:
+- Folder 01_, 02_, 03_ berisi DATA MENTAH (raw data)
+- Folder 00_input_quarto berisi DATA HASIL OLAHAN (output dari _02_script/data_preparation.py) dan dibaca oleh _02_script/generate_report.py
+- JANGAN edit file di folder 00_input_quarto secara manual -- akan tertimpa
+  setiap kali data_preparation.py dijalankan ulang
+
+
+================================================================================
+1. FOLDER: 01_raw_outstanding/
+================================================================================
+
+Isi: 1 file Excel format lama (.xls), fungsinya HANYA untuk mengambil asumsi
+nilai tukar (kurs) IDR per mata uang asing.
+
+Format File:
+- Format: .xls
+
+Cara Script Membaca File Ini:
+- Script mencari teks pola "Assumed exchange rate for conversion (IDR/XXX) is ..." di mana pun dalam sheet, untuk tiap mata uang: USD, JPY, EUR, AUD, CNH, CNY
+- Tanggal update diambil dari teks tanggal format "Month DD, YYYY" (contoh: "August 12, 2026") yang dicari di baris ke-2 file
+
+Cara Update:
+- Download file Outstanding dari DMFAS, copy ke folder 01_raw_outstanding/
+
+================================================================================
+2. FOLDER: 02_fiskal/
+================================================================================
+
+Isi: 1 file Excel (.xlsx), sumber utama untuk tabel "Realisasi Penerbitan SBN" dan data chart "Realisasi & Proyeksi Arus Kas APBN" / "SBN Neto Kumulatif".
+
+Format File:
+- Format: .xlsx
+- Sheet yang dipakai script: tabel_fiskal, issuance_2026, rencana_2026, maturity_all_2026, maturity_spn_spns_2026, maturity_SRBI_2026, buyback_2026
+
+Cara Update:
+- Update data (baris/angka) langsung di masing-masing sheet di atas
+- Jangan ubah struktur tabel, termasuk nama kolomnya
+
+================================================================================
+3. FOLDER: 03_econ/
+================================================================================
+
+Isi: 1 file Excel (.xlsx), sumber untuk tabel "Realisasi Indikator Ekonomi APBN" dan "Realisasi Indikator Ekonomi Lainnya".
+
+Format File:
+- Format: .xlsx
+
+Cara Update:
+- refresh Bloomberg pada sheet bb
+- sheet tabel_econ1 otomatis terupdate
+- update manual sheet tabel_econ2 sesuai sumber data (BI dan BPS)
+
+================================================================================
+OUTPUT: FOLDER 00_input_quarto/
+================================================================================
+
+Setelah data_preparation.py selesai, folder ini akan berisi 6 file CSV (masing-masing diberi prefix tanggal YYYYMMDD):
+
+- {tanggal}_kurs.csv        (dari 01_raw_outstanding)
+- {tanggal}_fiskal.csv      (dari 02_fiskal, sheet tabel_fiskal)
+- {tanggal}_fiskal_in.csv   (dari 02_fiskal, gabungan issuance_2026 + rencana_2026)
+- {tanggal}_fiskal_out.csv  (dari 02_fiskal, gabungan 4 sheet maturity/buyback)
+- {tanggal}_econ1.csv       (dari 03_econ, sheet tabel_econ1)
+- {tanggal}_econ2.csv       (dari 03_econ, sheet tabel_econ2)
+
+_02_script/generate_report.py otomatis mencari file dengan tanggal terbaru (urutan alfabetis/numerik nama file) untuk masing-masing jenis di atas.
+
+
+================================================================================

@@ -1,0 +1,25 @@
+_01_data_input/00_input_quarto/*
+!_01_data_input/00_input_quarto/.gitkeep
+
+_01_data_input/01_raw_outstanding/*
+!_01_data_input/01_raw_outstanding/.gitkeep
+
+_01_data_input/02_fiskal/*
+!_01_data_input/02_fiskal/.gitkeep
+
+_01_data_input/03_econ/*
+!_01_data_input/03_econ/.gitkeep
+
+_03_output_pdf/*
+!_03_output_pdf/.gitkeep
+
+# Python
+__pycache__/
+*.pyc
+
+# File sementara generate_report.py
+_report_tmp.html
+
+# OS junk
+.DS_Store
+Thumbs.db

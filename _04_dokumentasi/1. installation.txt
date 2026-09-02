@@ -1,0 +1,225 @@
+================================================================================
+PANDUAN INSTALASI - PROJECT SLIDE FISKAL (MARKET UPDATE - PART FISKAL)
+================================================================================
+
+Panduan ini untuk pengguna baru yang belum menginstall software apapun.
+
+Yang perlu di-install hanya:
+  1. Python
+  2. wkhtmltopdf
+  3. Python packages (lihat "0. requirements.txt")
+
+
+================================================================================
+1. INSTALL PYTHON (15 menit)
+================================================================================
+
+1.1 Download Python
+    - Buka browser, ketik: https://www.python.org/downloads/
+    - Pilih versi 3.9 atau lebih baru
+    - Download "Windows installer (64-bit)"
+
+1.2 Install Python
+    1. Klik 2x file yang sudah didownload (contoh: python-3.x.x-amd64.exe)
+    2. PENTING: Centang kotak "Add Python to PATH" di bagian pertama
+    3. Klik "Install Now"
+    4. Tunggu sampai selesai (akan muncul "Setup was successful")
+
+1.3 Cek Instalasi Berhasil
+    1. Buka Command Prompt (tekan tombol Windows, ketik "cmd", Enter)
+    2. Ketik: python --version
+    3. Tekan Enter
+    4. Harusnya muncul: Python 3.x.x (versi yang Anda install)
+
+    Jika error: Restart komputer, lalu coba lagi
+    Jika masih error: uninstall Python dan install ulang dengan centang
+    "Add Python to PATH"
+
+
+================================================================================
+2. INSTALL WKHTMLTOPDF (10 menit)
+================================================================================
+
+Tool ini yang dipakai _02_script/generate_report.py untuk mengubah halaman HTML
+(hasil tabel + chart) menjadi file PDF.
+
+2.1 Download wkhtmltopdf
+    - Buka browser, ketik: https://wkhtmltopdf.org/downloads.html
+    - Pilih installer untuk Windows (stable release)
+    - Download file .exe
+
+2.2 Install wkhtmltopdf
+    1. Klik 2x file installer
+    2. Ikuti wizard instalasi
+    3. PENTING: kalau tidak ada alasan khusus, biarkan pakai lokasi default:
+       C:\Program Files\wkhtmltopdf\
+       (script otomatis mencari di lokasi ini kalau wkhtmltopdf tidak
+       ditemukan di PATH sistem -- lihat fungsi find_wkhtmltopdf() di
+       _02_script/generate_report.py)
+    4. Klik Finish
+
+2.3 Cek Instalasi Berhasil
+    1. Buka File Explorer
+    2. Buka folder: C:\Program Files\wkhtmltopdf\bin\
+    3. Cek ada file: wkhtmltopdf.exe
+
+    Jika tidak ada: Install ulang dengan benar
+
+    Catatan: kalau Anda install wkhtmltopdf di lokasi lain, pastikan
+    folder "bin"-nya ditambahkan ke PATH sistem (Environment Variables),
+    supaya script tetap bisa menemukannya otomatis.
+
+
+================================================================================
+3. CEK & UPGRADE PIP (5 menit)
+================================================================================
+
+pip adalah package manager untuk Python. Biasanya sudah terinstall otomatis
+saat install Python, tapi perlu dicek dan di-upgrade ke versi terbaru.
+
+CATATAN PENTING:
+- Jika pip di PATH: gunakan command "pip"
+- Jika pip TIDAK di PATH: gunakan command "python -m pip"
+- Keduanya sama saja, pilih yang berhasil di komputer Anda
+
+3.1 Cek pip Sudah Terinstall
+    1. Buka Command Prompt (jika belum)
+    2. Ketik: pip --version
+    3. Tekan Enter
+
+    Jika muncul versi pip (contoh: pip 23.x.x):
+    -> pip sudah terinstall dan di PATH
+    -> Lanjut ke langkah 3.3 (upgrade pip)
+
+    Jika error "pip is not recognized":
+    -> pip tidak di PATH (tapi kemungkinan sudah terinstall)
+    -> Lanjut ke langkah 3.2
+
+3.2 Cek pip dengan Command Alternatif (Jika Langkah 3.1 Error)
+    1. Ketik: python -m pip --version
+    2. Tekan Enter
+
+    Jika muncul versi pip:
+    -> pip sudah terinstall, tapi tidak di PATH
+    -> UNTUK KEDEPANNYA, gunakan "python -m pip" untuk semua perintah
+    -> Lanjut ke langkah 3.3
+
+3.3 Upgrade pip ke Versi Terbaru
+    Pilih salah satu command (sesuai hasil langkah 3.1 atau 3.2):
+
+    Jika pip di PATH:
+    1. Ketik: pip install --upgrade pip
+
+    Jika pip TIDAK di PATH:
+    1. Ketik: python -m pip install --upgrade pip
+
+    Tunggu sampai selesai (muncul "Successfully installed pip-xx.x.x")
+
+
+================================================================================
+4. INSTALL PYTHON PACKAGES (5-10 menit)
+================================================================================
+
+4.1 Navigasi ke Folder Project
+    1. Di Command Prompt, ketik (ganti [YourUsername] dengan nama user Anda):
+
+       cd "C:\Users\[YourUsername]\OneDrive\Project - Slide Fiskal"
+       (sesuaikan dengan lokasi folder project Anda -- contoh di atas
+       adalah lokasi project ini saat ini)
+
+    2. Tekan Enter
+
+4.2 Install Packages dari 0. requirements.txt
+    1. Ketik (atau "python -m pip install ..." jika pip tidak di PATH):
+       pip install -r "_04_dokumentasi\0. requirements.txt"
+    2. Tekan Enter
+    3. Tunggu sampai selesai (install pandas, openpyxl, xlrd, numpy,
+       matplotlib, great_tables)
+    4. Sukses jika muncul: "Successfully installed ..." di akhir proses
+
+4.3 Cek Instalasi Berhasil
+    1. Ketik: pip list   (atau: python -m pip list)
+    2. Harusnya muncul di daftar packages: pandas, numpy, matplotlib,
+       openpyxl, xlrd, great_tables
+
+
+================================================================================
+5. TEST RUN (5 menit)
+================================================================================
+
+5.1 Jalankan generate.bat
+    1. Buka folder project di File Explorer
+    2. Double-click file: generate.bat
+    3. Tunggu sampai proses "Data Preparation" dan "Generating PDF Report"
+       selesai tanpa error
+
+5.2 Cek Hasilnya
+    1. Buka folder: _03_output_pdf\
+    2. Harusnya ada file baru dengan nama: {YYYYMMDD} MU Part Fiskal.pdf
+       (contoh: 20260812 MU Part Fiskal.pdf)
+    3. Buka file PDF-nya, cek tabel dan chart tampil rapi (1 halaman)
+
+
+================================================================================
+TROUBLESHOOTING - Jika Ada Error
+================================================================================
+
+ERROR: "python: command not found" / "python is not recognized"
+SOLUSI:
+1. Uninstall Python (Control Panel > Programs > Uninstall)
+2. Install ulang Python dengan WAJIB centang "Add Python to PATH"
+3. Restart komputer
+
+---
+
+ERROR: "No module named 'pandas'" (atau library lain)
+SOLUSI:
+1. Buka Command Prompt di folder project (lihat langkah 4.1)
+2. Ketik: pip install -r "_04_dokumentasi\0. requirements.txt"
+3. Tunggu sampai selesai
+
+---
+
+ERROR: "FileNotFoundError: ... 'C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe'"
+Penyebab: wkhtmltopdf belum terinstall, atau terinstall di lokasi lain dan
+tidak ada di PATH sistem
+SOLUSI:
+1. Cek file ada di: C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe
+2. Jika tidak ada, install wkhtmltopdf (lihat bagian 2 di atas)
+3. Jika Anda install di lokasi custom, tambahkan folder "bin"-nya ke PATH
+   sistem, atau install ulang ke lokasi default
+
+---
+
+ERROR: "PermissionError: [Errno 13] Permission denied" (saat baca file Excel)
+Penyebab: file Excel sumber sedang terbuka di Excel (atau OneDrive sedang
+sync file itu)
+SOLUSI:
+1. Tutup file Excel yang bersangkutan
+2. Cek status sync OneDrive sudah selesai
+3. Jalankan ulang generate.bat
+
+---
+
+ERROR: "FileNotFoundError" (file input tidak ditemukan)
+SOLUSI:
+1. Pastikan file-file Excel ada di folder _01_data_input yang sesuai (lihat:
+   "2. data_preparation.txt")
+2. Jika menggunakan OneDrive, tunggu hingga sync selesai
+
+
+================================================================================
+CHECKLIST
+================================================================================
+
+Sebelum jalankan generate.bat, pastikan semua ini sudah OK:
+
+[ ] Python terinstall - Cek: python --version
+[ ] wkhtmltopdf terinstall - Cek file di C:\Program Files\wkhtmltopdf\bin\
+[ ] Python packages terinstall - Cek: pip list
+[ ] File Excel input sudah ada di folder _01_data_input (lihat:
+    "2. data_preparation.txt")
+[ ] OneDrive sudah selesai sync (jika menggunakan OneDrive)
+
+
+================================================================================

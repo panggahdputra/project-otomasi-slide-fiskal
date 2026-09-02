@@ -1,0 +1,243 @@
+================================================================================
+PANDUAN EKSEKUSI - PROJECT SLIDE FISKAL (MARKET UPDATE - PART FISKAL)
+================================================================================
+
+Panduan ini menjelaskan cara menjalankan generate.bat beserta troubleshooting-nya.
+
+
+================================================================================
+ALUR KERJA LENGKAP
+================================================================================
+
+Langkah 1: Persiapan Data
+   - Update file Excel di folder _01_data_input (lihat: "2. data_preparation.txt")
+
+Langkah 2: Jalankan generate.bat
+   - Otomatis menjalankan _02_script\data_preparation.py
+   - Otomatis menjalankan _02_script\generate_report.py
+   - Hasilnya: file PDF siap digunakan
+
+Langkah 3: Cek Output PDF
+   - File tersimpan di folder: _03_output_pdf\
+   - Nama file: {YYYYMMDD} MU Part Fiskal.pdf
+   - Contoh: 20260812 MU Part Fiskal.pdf
+   - Isi: 1 halaman (tabel fiskal, tabel indikator ekonomi, chart arus kas APBN, chart SBN neto kumulatif, narasi realisasi & proyeksi)
+
+
+================================================================================
+CARA MENGGUNAKAN GENERATE.BAT
+================================================================================
+
+Double-click satu file, semuanya otomatis!
+
+
+------------------------------------------------------------------------
+INDIKATOR SUKSES
+------------------------------------------------------------------------
+
+Proses berhasil jika:
+
+- Muncul "Running Data Preparation..." tanpa baris "!!! ERROR" di bawahnya
+- Muncul "Generating PDF Report..." tanpa traceback error di bawahnya
+- Muncul "Done! PDF sudah tersimpan langsung di folder _03_output_pdf\"
+- File PDF ter-generate di folder _03_output_pdf\ dengan nama sesuai tanggal
+  hari ini
+- PDF bisa dibuka dan berisi 1 halaman lengkap (tabel, chart, narasi)
+
+------------------------------------------------------------------------
+JIKA ADA ERROR
+------------------------------------------------------------------------
+
+Batch file akan otomatis berhenti dan menampilkan pesan error:
+
+"ERROR: Data preparation failed!"
+  - Lihat bagian TROUBLESHOOTING DATA_PREPARATION.PY di bawah
+  - Tekan tombol apapun untuk menutup
+  - Perbaiki error lalu jalankan ulang generate.bat
+
+"ERROR: Generate report failed!"
+  - Lihat bagian TROUBLESHOOTING GENERATE_REPORT.PY di bawah
+  - Tekan tombol apapun untuk menutup
+  - Perbaiki error lalu jalankan ulang generate.bat
+
+
+================================================================================
+CHECKLIST AKHIR
+================================================================================
+
+Sebelum submit PDF, pastikan:
+
+[ ] Data di folder 01_raw_outstanding, 02_fiskal, 03_econ sudah update
+[ ] Double-click generate.bat
+[ ] Proses berjalan tanpa error
+[ ] 6 file CSV ter-generate di folder _01_data_input\00_input_quarto\
+[ ] File PDF ter-generate di folder _03_output_pdf\ dengan nama {YYYYMMDD} MU Part Fiskal.pdf
+[ ] PDF bisa dibuka tanpa error, 1 halaman lengkap
+[ ] Semua chart terlihat jelas (tidak pecah/blur)
+[ ] Semua tabel terformat dengan baik (tidak ada kolom terpotong)
+[ ] Data dalam chart/tabel sesuai dengan data input
+[ ] Tanggal dalam PDF sesuai dengan periode reporting
+[ ] Nilai kurs (USD, JPY, EUR, AUD, CNH, CNY) sesuai dengan data terbaru
+[ ] Narasi "Realisasi" dan "Proyeksi" di bawah chart sudah sesuai (angka defisit, realisasi SUN/SBSN, proyeksi bulan berjalan)
+
+
+================================================================================
+TROUBLESHOOTING GENERATE.BAT
+================================================================================
+
+ERROR: Batch file tidak bisa dibuka atau langsung tertutup
+Solusi:
+  1. Klik kanan file generate.bat
+  2. Pilih "Edit" untuk lihat isinya
+  3. Pastikan 2 baris "python ..." di dalamnya menunjuk ke
+     _02_script\data_preparation.py dan _02_script\generate_report.py
+  4. Save dan coba lagi
+
+---
+
+ERROR: "python: command not found" / "python is not recognized"
+Solusi:
+  1. Python belum terinstall atau tidak ada di PATH
+  2. Install Python (lihat: "1. installation.txt")
+  3. Restart komputer
+  4. Jalankan ulang generate.bat
+
+
+================================================================================
+TROUBLESHOOTING DATA_PREPARATION.PY
+================================================================================
+
+ERROR	: "FileNotFoundError: Tidak ada file dengan pola *.xlsx/*.xls di ..."
+Penyebab: file Excel input tidak ditemukan di folder yang sesuai
+Solusi	:
+  1. Cek folder _01_data_input\01_raw_outstanding, 02_fiskal, 03_econ
+  2. Pastikan masing-masing ada file Excel sesuai format (lihat: "2. data_preparation.txt")
+  3. Jika menggunakan OneDrive, tunggu hingga sync selesai
+
+---
+
+ERROR	: "PermissionError: [Errno 13] Permission denied: '...\\fiskal.xlsx'" (atau nama file Excel lain)
+Penyebab: file Excel sedang terbuka di aplikasi Excel, atau sedang di-sync OneDrive
+Solusi	:
+  1. Tutup file Excel yang bersangkutan
+  2. Cek tidak ada proses OneDrive sync yang berjalan untuk file itu
+  3. Jalankan ulang generate.bat
+
+---
+
+ERROR	: "Worksheet named 'nama_sheet' not found" (atau sejenisnya)
+Penyebab: nama sheet di file Excel tidak sesuai/hilang
+Solusi	:
+  1. Buka file Excel yang error
+  2. Cek nama sheet HARUS PERSIS seperti di panduan (huruf besar/kecil berpengaruh) -- lihat daftar lengkap di "2. data_preparation.txt"
+  3. Perbaiki nama sheet, save, jalankan ulang
+
+---
+
+ERROR	: "KeyError: 'NamaKolom'"
+Penyebab: nama kolom di sheet Excel tidak sesuai dengan yang diharapkan
+Solusi	:
+  1. Buka file Excel yang error, buka sheet yang disebut di pesan error
+  2. Cek nama kolom harus PERSIS seperti di "2. data_preparation.txt"
+  3. Hapus spasi tidak wajar di awal/akhir nama kolom
+  4. Save, jalankan ulang
+
+---
+
+ERROR	: "Kurs tidak ditemukan untuk [KODE_MATA_UANG]"
+Penyebab: ada baris data dengan mata uang (kolom Currency) yang belum ada kursnya di file Outstanding.xls, atau belum ditambahkan ke daftar target_currency di _02_script/data_preparation.py
+Solusi	:
+  1. Cek apakah teks "Assumed exchange rate for conversion (IDR/[KODE]) is ..." memang ada di file Outstanding.xls
+  2. Cek variabel target_currency di fungsi extract_nilai_kurs() (_02_script/data_preparation.py) -- tambahkan kode mata uang barunya kalau belum ada di daftar
+  3. Jalankan ulang generate.bat
+
+---
+
+ERROR	: "ValueError: could not convert string to float" / error terkait tanggal-angka campur (mis. "'<' not supported between instances of 'Timestamp' and 'int'")
+Penyebab: kolom yang seharusnya berisi angka/tanggal ternyata ada isian teks atau baris kosong yang tidak konsisten di file Excel sumber
+Solusi	:
+  1. Buka file Excel yang error
+  2. Cek kolom yang disebut di pesan error (biasanya kolom "Jatuh Tempo" atau kolom angka lain)
+  3. Pastikan tidak ada teks (contoh: "N/A", "-", "TBD") di kolom yang seharusnya berisi tanggal/angka -- kosongkan saja sel itu
+  4. Jalankan ulang generate.bat
+
+---
+
+ERROR	: "ModuleNotFoundError: No module named 'pandas'" (atau library lain)
+Solusi	:
+  1. Install dependencies: pip install -r "_04_dokumentasi\0. requirements.txt"
+  2. Verify: pip list
+  3. Jalankan ulang generate.bat
+
+---
+
+Script berjalan tapi hasilnya kosong atau salah
+Solusi	:
+  1. Cek data mentah di folder 01_raw_outstanding, 02_fiskal, 03_econ
+  2. Pastikan data lengkap dan tidak kosong
+  3. Buka file CSV hasil di folder _01_data_input\00_input_quarto\, lihat apakah datanya masuk akal
+  4. Jika perlu, hapus semua file di 00_input_quarto\ lalu jalankan ulang generate.bat
+
+
+================================================================================
+TROUBLESHOOTING GENERATE_REPORT.PY
+================================================================================
+
+ERROR	: "FileNotFoundError" saat mencari file CSV (mis. "*fiskal_in.csv")
+Penyebab: file input di folder 00_input_quarto\ tidak ada
+Solusi	:
+  1. Jalankan dulu: python _02_script\data_preparation.py
+  2. Cek folder _01_data_input\00_input_quarto\ ada 6 file CSV (lihat daftar lengkap di "2. data_preparation.txt")
+  3. Jika tidak ada, lihat TROUBLESHOOTING DATA_PREPARATION.PY di atas
+
+---
+
+ERROR	: "FileNotFoundError: ... 'C:\\Program Files\\wkhtmltopdf\\bin\\ wkhtmltopdf.exe'" / "wkhtmltopdf gagal (exit ...)"
+Penyebab: wkhtmltopdf belum terinstall, atau terinstall di lokasi lain dan tidak ada di PATH sistem
+Solusi	:
+  1. Cek file ada di: C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe
+  2. Jika tidak ada, install wkhtmltopdf (lihat: "1. installation.txt")
+  3. Jika install di lokasi custom, tambahkan folder "bin"-nya ke PATH sistem
+  4. Jalankan ulang generate.bat
+
+---
+
+ERROR	: "ModuleNotFoundError: No module named 'great_tables'" (atau 'matplotlib', dll)
+Solusi	:
+  1. Install dependencies: pip install -r "_04_dokumentasi\0. requirements.txt"
+  2. Jalankan ulang generate.bat
+
+---
+
+PDF ter-generate tapi kosong, chart/tabel hilang, atau layout berantakan
+Solusi	:
+  1. Cek data di _01_data_input\00_input_quarto\ tidak kosong/aneh
+  2. Buka file HTML sementara (kalau masih ada, biasanya _03_output_pdf\_report_tmp.html -- normalnya otomatis terhapus setelah PDF berhasil dibuat) untuk lihat isi mentahnya
+  3. Hapus PDF lama, jalankan ulang generate.bat
+
+---
+
+PDF ada tapi chart terlihat pecah/blur saat di-zoom
+Penyebab: chart di-render sebagai gambar (PNG), beda dengan tabel yang murni teks/HTML (makanya tabel selalu tajam di zoom berapa pun)
+Solusi	:
+  - Resolusi chart diatur lewat parameter dpi di fungsi fig_to_base64() (_02_script/generate_report.py) -- naikkan nilainya kalau masih kurang tajam (trade-off: ukuran file PDF jadi lebih besar)
+
+---
+
+PDF ada tapi angka/narasi tidak sesuai
+Solusi	:
+  1. Cek data mentah di folder 01_raw_outstanding, 02_fiskal, 03_econ
+  2. Cek data hasil di folder _01_data_input\00_input_quarto\
+  3. Jalankan ulang: python _02_script\data_preparation.py
+  4. Jalankan ulang: python _02_script\generate_report.py
+
+---
+
+Render lambat / komputer terasa berat
+Solusi	:
+  1. Tutup aplikasi lain yang berat
+  2. Tunggu hingga selesai -- jangan di-cancel di tengah proses
+  3. Jika di-cancel, hapus file sementara _03_output_pdf\_report_tmp.html (kalau ada) dan coba ulang generate.bat
+
+
+================================================================================
