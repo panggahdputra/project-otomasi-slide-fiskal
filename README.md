@@ -19,7 +19,7 @@ Slide Fiskal/
 │   └── {YYYYMMDD} MU Part Fiskal.pdf  # hasil akhir
 └── _04_dokumentasi/
     ├── 0. requirements.txt          # daftar dependency Python
-    ├── 1. installation.txt          # panduan instalasi Python, wkhtmltopdf, packages
+    ├── 1. installation.txt          # panduan instalasi Python, wkhtmltopdf, packages lain
     ├── 2. data_preparation.txt      # format & cara update tiap file Excel input
     └── 3. execution.txt             # cara jalan & troubleshooting generate.bat
 ```
